@@ -1,0 +1,745 @@
+Web Application Penetration Testing and Monitoring: Server Setup Documentation
+Project Members
+Veronica
+Bernard
+Pacifique
+Eliyar
+
+1. Introduction
+This document provides a comprehensive guide to setting up a web application server on PC1, which will host and run vulnerable web applications such as Mutillidae, DVWA, and OWASP Juice Shop. These applications will serve as targets for penetration testing. The setup involves configuring essential components, including a web server (Apache) and a database server (MySQL), to support the web applications.
+Server Details
+Provided by: Becode
+User remove computer: besec@PJ1GNT
+Access via SSH: ssh besec@10.13.1.50
+Password: xxxx
+
+2. System Requirements
+Software Requirements
+Operating System:
+Linux (e.g., Ubuntu 20.04)
+Windows 10/11
+Web Server: Apache
+Database Server: MySQL
+Vulnerable Web Applications:
+Mutillidae
+DVWA (Damn Vulnerable Web Application)
+OWASP Juice Shop
+Version Control: Git (for downloading repositories)
+Penetration Testing Tools:
+OWASP ZAP
+SQLmap
+Nmap
+
+3. Installation and Configuration
+3.1. Install XAMPP for Apache and MySQL
+3.1.1. Download and Install XAMPP
+Download XAMPP:
+Visit the official XAMPP website: XAMPP Official Website.
+Choose the version that matches your operating system (Windows/Linux).
+Install XAMPP:
+Run the installer.
+Follow the on-screen instructions.
+Select components: Ensure both Apache and MySQL are selected.
+Complete the installation process.
+Start XAMPP:
+Launch the XAMPP Control Panel.
+Start the Apache and MySQL services.
+3.1.2. Verify Installation
+Apache:
+Open a web browser and navigate to http://10.13.1.50.
+You should see the XAMPP dashboard indicating that Apache is running successfully.
+MySQL:
+Open a web browser and navigate to http://10.13.1.50/phpmyadmin.
+This should display the phpMyAdmin interface, confirming MySQL is operational.
+
+
+
+4. Attacker's Machine Setup - PC2
+The penetration testing will be conducted from PC2, which should be configured with the following:
+Operating System
+Kali Linux 
+Penetration Testing Tools
+OWASP ZAP
+SQLmap
+Nmap
+4.2. OWASP ZAP Installation and Setup
+4.2.1. Install OWASP ZAP
+Download and Install ZAP:
+Download OWASP ZAP from the official website.
+Alternatively, install ZAP using package managers:
+
+sudo apt-get install zaproxy
+Start ZAP:
+Launch ZAP by typing zap in the terminal or launching it from the applications menu.
+4.2.2. Configure ZAP
+Set Up Browser:
+Configure your browser to use ZAP as a proxy by setting the proxy settings to localhost:8080.
+Ensure that the browser traffic is routed through ZAP for interception and analysis.
+Install ZAP Extensions:
+Use the ZAP Marketplace within the tool to install any required add-ons or extensions that might assist with the specific penetration testing tasks.
+4.3. Penetration Testing with ZAP
+4.3.1. Spidering and Scanning
+Spidering:
+Use the spider feature to crawl the web application hosted on PC1 (http://10.13.1.50).
+The spider will discover all the pages and forms that can be tested.
+Active Scanning:
+After spidering, use the active scan feature to automatically test for vulnerabilities like SQL Injection, Cross-Site Scripting (XSS), and more.
+Review the scan results for any identified vulnerabilities.
+4.3.2. Manual Testing
+Intercepting Requests:
+Use ZAP’s intercepting proxy to manually review and modify HTTP requests and responses.
+Perform targeted testing for vulnerabilities like parameter tampering, session management flaws, and more.
+Testing Authentication Mechanisms:
+Evaluate the security of authentication mechanisms by testing for issues like weak password policies, session fixation, and brute force attacks.
+4.3.3. Reporting
+Generate Reports:
+After completing the scans and tests, generate a detailed report using ZAP’s reporting feature.
+The report should include a summary of the findings, detailed descriptions of vulnerabilities, and remediation recommendations.
+Review and Document:
+Review the generated report with the team, discuss the findings, and document any critical issues that need to be addressed on PC1.
+
+5. Conclusion
+The setup of the web application server on PC1 and the attacker’s machine on PC2 provides a robust environment for conducting web application penetration testing. With the combination of tools like Burp Suite and OWASP ZAP, you can perform comprehensive assessments, identifying and addressing potential security vulnerabilities in the applications hosted on the server.
+
+
+
+
+
+
+Installing and Configuring Wireshark on Kali Linux
+1. System Preparation
+Update Your System: Ensure your system is up to date:
+
+sudo apt update && sudo apt upgrade
+2. Install Wireshar:
+sudo apt install wireshark
+During installation, decide whether to allow non-root users to capture packets.
+3. Configure Wireshark
+Set Up a Capture Filter:
+Use capture filters to limit the amount of data Wireshark captures by entering a BPF expression in the "Capture Filter" field.
+Set Up Display Filters:
+Use display filters to focus on specific types of traffic after capturing it.
+Configure Preferences:
+Customize Wireshark's behavior by going to Edit > Preferences.
+4. Run Wireshark
+Launch Wireshark:
+Option 1: Run Wireshark on a Local Machine
+If you are trying to run Wireshark on a remote server, it's best to install and run it on a local machine with a graphical interface.
+
+Option 2: Use X11 Forwarding
+If you are using SSH to connect to a remote machine, you can enable X11 forwarding to display the Wireshark GUI on your local machine.
+
+Enable X11 Forwarding in SSH:
+
+On your local machine, ensure you have an X server running (e.g., Xming on Windows, XQuartz on macOS, or Xorg on Linux).
+
+Connect to your remote machine using SSH with the -X flag:
+
+ssh -X besec@10.13.1.50
+
+
+Now, try running Wireshark again:
+wireshark
+5. Capture Packets
+Start Capturing:
+Select an interface from the list and click the blue shark fin icon or go to Capture > Start.
+User Permissions:
+If you encounter permission issues, add your user to the wireshark group:
+
+sudo usermod -aG wireshark $USER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Monitoring and Logging Server
+
+
+Install and configure Suricata for generating logs
+
+Break this process into the following parts:
+
+1. Environment Setup
+2. Initial Configuration
+3. Basic Testing
+4. Understanding Suricata Rules
+5. Creating Custom Rules
+6. Deliverables
+
+1. Environment Setup
+
+Step 1: Update System
+
+sudo apt-get update
+sudo apt-get upgrade
+
+ Install Suricata
+
+First, ensure necessary dependencies are installed:
+
+sudo apt-get install -y libpcre3 libpcre3-dbg libpcre3-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 make libmagic-dev libjansson-dev libjansson4 pkg-config
+
+Then install Suricata:
+
+sudo apt-get install -y suricata
+
+
+Verify the installation:
+
+suricata --build-info
+
+2. Initial Configuration
+
+Step 1: Edit the Suricata YAML Configuration File
+
+The primary configuration file is located at `/etc/suricata/suricata.yaml`.
+
+sudo nano /etc/suricata/suricata.yaml
+
+
+Key Configurations:
+
+- Network Interfaces:
+  Find the `af-packet` section and configure your network interface:
+
+  - yaml
+  af-packet:
+    - interface: eth0
+      threads: 1
+      cluster-id: 99
+      cluster-type: cluster_flow
+      defrag: yes
+  ```
+
+- Logging Configuration:
+
+  Ensure JSON and EVE logging is enabled:
+
+  ```yaml
+  outputs:
+    - eve-log:
+        enabled: yes
+        filetype: regular
+        filename: /var/log/suricata/eve.json
+        types:
+          - alert:
+              metadata: yes
+  ```
+
+3. Basic Testing
+
+Step 1: Start Suricata in Live Mode
+
+sudo suricata -c /etc/suricata/suricata.yaml -i eth0
+
+Step 2: Generate Network Traffic
+
+Use tools like `curl`, `ping`, and `nmap` to generate traffic:
+
+
+ping google.com
+curl http://testmyids.com
+nmap -A localhost
+
+Verify logs are being captured:
+
+tail -f /var/log/suricata/eve.json```
+
+4. Understanding Suricata Rules
+
+Study Existing Rules:
+
+Suricata rules are located in `/etc/suricata/rules/`. Study their structure:
+
+
+cat /etc/suricata/rules/*.rules
+
+Documentation:
+
+Suricata's [official documentation](https://suricata.readthedocs.io/en/suricata-6.0.0/rules/index.html) provides insights into writing custom rules.
+
+5. Creating Custom Rules
+
+Step 1: Write Custom Rules
+
+Create a file named `local.rules` in `/etc/suricata/rules/`:
+
+
+sudo nano /etc/suricata/rules/local.rules
+
+Add custom rules. Example rules:
+
+1. Detect SSH Login Attempts:
+   
+   yaml
+   alert tcp any any -> any 22 (msg:"SSH Login Attempt"; sid:1000001; rev:1;)
+   
+
+2. HTTP Requests to a Specific URI:
+
+   yaml
+   alert http any any -> any any (msg:"HTTP Request to /admin"; http.uri; content:"/admin"; sid:1000002; rev:1;)
+  
+3. Suspicious DNS Queries:
+
+   yaml
+   alert dns any any -> any any (msg:"Suspicious DNS Query"; dns.query; content:"badwebsite.com"; sid:1000003; rev:1;)
+   
+
+4. Detect ICMP Echo Requests (ping):
+   yaml
+   alert icmp any any -> any any (msg:"ICMP Echo Request"; itype:8; sid:1000004; rev:1;)
+  
+5. Detect FTP Login Attempts:
+   yaml
+   alert tcp any any -> any 21 (msg:"FTP Login Attempt"; flow:to_server,established; content:"USER "; sid:1000005; rev:1;)
+   
+
+
+
+Step 2: Test Custom Rules
+
+Restart Suricata:
+
+sudo suricata -c /etc/suricata/suricata.yaml -i eth0
+
+Generate relevant traffic to test the rules and check logs to ensure they trigger correctly.
+
+6. Deliverables
+
+Screenshots:
+
+Suricata Configuration File:
+
+sudo cat /etc/suricata/suricata.yaml
+  
+
+Take a screenshot of the relevant parts of the configuration file.
+
+- Logs:
+
+  Capture logs showing traffic being logged. Compress the logs into a zip file:
+
+
+sudo zip -r suricata_logs.zip /var/log/suricata/
+  
+
+1.Verify Rule Loading: sudo tail -f /var/log/suricata/suricata.log
+2.Test with Traffic: sudo tail -f /var/log/suricata/fast.log
+3.Update Rules Regularly: sudo suricata-update
+4.restart Suricata to apply the changes: sudo suricata -c /etc/suricata/suricata.yaml -i eth0
+
+Conclusion
+Deploying Suricata in a test environment on Kali Linux provided valuable insights into its configuration, operation, and customization capabilities. Suricata proved to be a robust and flexible tool for network traffic analysis and intrusion detection. The experience highlighted the importance of thorough configuration and testing to leverage Suricata's full potential effectively.
+
+Installing and Configuring Splunk on Kali Linux
+
+1. System Preparation
+   - Update the System: Before installing Splunk, make sure your Kali Linux system is updated.
+
+sudo apt update && sudo apt upgrade -y
+     
+2. Download Splunk Enterprise
+   - Visit the Splunk Website: 
+Go to the [Splunk download page](https://www.splunk.com/en_us/download.html) and download the Splunk package for Linux. 
+Choose the `.deb` package for Debian-based systems, which Kali Linux is based on.
+   - Download via Terminal:
+    
+wget -O splunk-9.3.0-51ccf43db5bd-linux-2.6-amd64.deb "https://download.splunk.com/products/splunk/releases/9.3.0/linux/splunk-9.3.0-51ccf43db5bd-linux-2.6-amd64.deb"
+     
+
+3. Install Splunk
+   - Install the downloaded package:
+
+ sudo dpkg -i ./splunk-9.3.0-51ccf43db5bd-linux-2.6-amd64.deb
+    
+
+ 4. Start Splunk: Start the Splunk service.
+     
+sudo /opt/splunk/bin/splunk start
+     
+   Accept License Agreement: 
+During the first run, Splunk will prompt you to accept the license agreement. 
+Follow the prompts to accept and set up an admin username and password.
+
+5. Access Splunk Web Interface
+   - Access Splunk: Open your web browser and go to `http://10.13.1.50:8000/ ` 
+   - Login: 
+Use the admin credentials to log in user: splunkadmin password: spllunkadmin
+
+
+Configuring Splunk for Logging and Analysis
+
+1.Add Data for Logging
+   - From the Splunk Web Interface: 
+     - Go to Settings > Add Data.
+     - Choose your data source (e.g., files, directories, or syslogs).
+     - Follow the prompts to specify the source type, host, and index.
+
+   - Example: 
+     - To monitor a directory for logs, select "Monitor", then specify the path to the log files you want to monitor.
+
+2. Create and Manage Indexes
+   - Create an Index: Indexes help organize and store your data.
+     - Go to Settings > Indexes.
+     - Click New Index, provide a name, and set your desired parameters (e.g., storage size, retention policy).
+
+3. Search and Analyze Data
+   - Search the Indexed Data: 
+     - Navigate to the Search & Reporting app.
+     - Use Splunk’s powerful Search Processing Language (SPL) to query your data. 
+
+   - Basic Search Example:
+    
+     index=”suricata”  sourcetype=suricata error
+    
+     This search retrieves log entries containing the keyword "suricata" from the specified index and source type.
+
+   - Time-Based Search:
+    
+     index=suricata earliest=-24h@h latest=now
+    
+     This search retrieves data from the last 24 hours.
+
+4. Visualize Data
+   - Create Dashboards: Visualize your data using dashboards.
+     - Go to Dashboard and click Create New Dashboard.
+     - Add panels to display your data in graphs, charts, and tables.
+
+   - Example Dashboard Panel:
+     - Create a timechart to visualize errors over time:
+
+     index=<your_index_name> sourcetype=suricata error | timechart count by host
+     
+5. Alerts and Reports
+   - Set Up Alerts:
+     - Create alerts to notify you when specific conditions are met.
+     - Go to Alerts and set up a new alert using a saved search.
+
+   - Schedule Reports:
+     - Automate the generation of reports and have them emailed to you or stored in a specified location.
+
+Summary
+
+By following these steps, we will have Splunk installed, configured, and ready to log and analyze data on Kali Linux. Use the Splunk interface to manage data sources, search logs, create visualizations, and set up alerts for proactive monitoring.
+
+
+Install Splunk Forwarder (Optional)
+If you want to forward logs to a central Splunk instance, you can use the Splunk Universal Forwarder.
+
+Download and install the Splunk Forwarder:
+
+
+wget -O splunkforwarder-8.2.3-cd0848707637-linux-2.6-amd64.deb 'https://download.splunk.com/products/universalforwarder/releases/8.2.3/linux/splunkforwarder-8.2.3-cd0848707637-linux-2.6-amd64.deb'
+sudo dpkg -i splunkforwarder-8.2.3-cd0848707637-linux-2.6-amd64.deb
+Configure the Forwarder:
+
+Start the Splunk Forwarder:
+
+sudo /opt/splunkforwarder/bin/splunk start --accept-license
+Add the Suricata logs as an input:
+
+
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/suricata/eve.json
+Set the destination for forwarding:
+
+
+sudo /opt/splunkforwarder/bin/splunk add forward-server 10.13.1.50:8000
+
+Replace <splunk-server> with the address of your Splunk server.
+
+Step 6: Search in Splunk
+Once the logs are being forwarded to Splunk, you can search them using the Splunk web interface or CLI.
+
+Access Splunk Web Interface:
+
+Open a web browser and go to 10.13.1.50:8000.
+
+Log in with your Splunk credentials.
+
+Create a Search:
+
+In the search bar, you can use Splunk's search language to query the Suricata logs. For example:
+
+source="/var/log/suricata/eve.json" sourcetype="suricata"
+You can add filters and conditions as needed, such as:
+
+
+source="/var/log/suricata/eve.json" sourcetype="suricata" event_type="alert"
+Step 7: Monitor and Analyze
+Use Splunk's powerful search and reporting capabilities to monitor and analyze the Suricata logs. You can create dashboards, alerts, and reports to gain insights into network traffic and potential security threats.
+
+By following these steps, you can generate logs from Suricata on a Linux system and effectively search and analyze them in Splunk.
+
+
+Combining Suricata with Splunk is a powerful strategy for enhancing network security monitoring and incident response. Here’s why it’s a good idea:
+
+This combination enhances the ability to detect, correlate, and respond to complex security threats.
+
+
+
+Penetration Testing Phases
+Reconnaissance (Information Gathering)
+Objective: Gather as much information as possible about the target application without directly interacting with it. This phase focuses on understanding the application's structure, technology stack, and any publicly available data that could be useful.
+Techniques and Tools:
+Passive Reconnaissance: Gathering information without directly engaging with the target. Tools and methods include Google Dorking, public databases, and analyzing WHOIS data.
+Active Reconnaissance: Directly interacting with the target to gather information. For example, using whois or dig to get DNS records, or using tools like Nmap for light probing.
+Purpose: Understanding the attack surface, identifying exposed components, and mapping potential points of entry.
+Scanning
+Objective: Actively scan the target to identify vulnerabilities, open ports, services, and configurations that could be exploited.
+Techniques and Tools:
+Port Scanning: Using tools like Nmap to discover open ports and the services running on them. This helps identify entry points such as HTTP, FTP, or SSH services.
+Vulnerability Scanning: Using tools like OWASP ZAP or Nikto to identify known vulnerabilities within the web application.
+Purpose: To find weaknesses that can be exploited in the next phases, such as outdated software versions, misconfigurations, or open ports that shouldn't be exposed.
+Exploitation (Attack Phase)
+Objective: Attempt to exploit the identified vulnerabilities to gain unauthorized access, escalate privileges, or extract sensitive data.
+Techniques and Tools:
+Automated Exploitation: Using tools like sqlmap to exploit SQL Injection vulnerabilities or OWASP ZAP to test for Cross-Site Scripting (XSS).
+Manual Exploitation: Manually crafting payloads and testing vulnerabilities like command injection or session hijacking using intercepting proxies like Burp Suite or OWASP ZAP.
+Purpose: To demonstrate the real-world impact of the vulnerabilities and assess how they could be used to compromise the application or extract data.
+Post-Exploitation
+Objective: Assess the extent of access gained, maintain persistence, escalate privileges, and evaluate the impact of the breach.
+Techniques and Tools:
+Data Extraction: Extracting sensitive data to demonstrate the impact of the vulnerability. For example, using sqlmap to dump database tables.
+Privilege Escalation: Attempting to elevate access to more sensitive areas of the application or server. Techniques include exploiting weak file permissions or misconfigurations.
+Maintaining Access: Setting up backdoors or creating unauthorized user accounts to maintain control over the compromised system.
+Purpose: To fully understand the depth of the breach and the potential damage an attacker could inflict.
+Reporting
+Objective: Compile and present the findings in a structured report, detailing the vulnerabilities discovered, the exploitation methods used, and the potential impact.
+Techniques and Tools:
+Documentation: Detailed descriptions of vulnerabilities, the steps taken to exploit them, screenshots, and data extracts.
+Remediation Recommendations: Provide clear and actionable recommendations to mitigate or fix the identified vulnerabilities.
+Purpose: To communicate the findings to stakeholders in a clear manner, emphasizing the need for security improvements and the specific steps required to enhance the application's security posture.
+Remediation and Retesting
+Objective: Work with the development and security teams to fix the vulnerabilities identified and retest to ensure the issues have been resolved.
+Techniques and Tools:
+Patch Deployment: Implementing security patches, updating software versions, and reconfiguring services to close identified gaps.
+Retesting: Using the same tools and techniques to verify that the vulnerabilities have been successfully mitigated.
+Purpose: To validate that the security measures are effective and that the application no longer exhibits the vulnerabilities previously exploited.
+Conclusion
+Each phase in the penetration testing process is crucial for systematically uncovering and understanding vulnerabilities within a web application. By moving through these phases methodically, penetration testers can simulate the actions of real-world attackers, providing invaluable insights that help strengthen the overall security posture of the application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Report: Incident Response Plan for Detected Attacks Using Splunk with Suricata Logs
+
+1. Introduction
+This report outlines the incident response plan for detecting and responding to attacks using Splunk in conjunction with Suricata logs. Suricata, a powerful open-source intrusion detection system (IDS), generates logs that provide insights into network traffic and potential security threats. Splunk, a widely-used platform for searching, monitoring, and analyzing machine-generated big data, will be used to process and analyze these logs for effective incident response.
+
+2. Objective
+The primary objective of this incident response plan is to ensure a rapid and efficient response to security incidents detected by Suricata and logged into Splunk. The plan aims to minimize the impact of security breaches, restore normal operations, and prevent future attacks.
+
+3. Preparation
+Deployment of Suricata: Ensure that Suricata is deployed across critical network segments, configured to monitor network traffic and generate logs based on predefined rules and signatures.
+Integration with Splunk: Suricata logs must be ingested into Splunk for real-time monitoring and analysis. This requires setting up data inputs in Splunk to receive Suricata logs, which can be done via syslog or file monitoring.
+Log Parsing and Normalization: Configure Splunk to parse and normalize Suricata logs, enabling effective querying and analysis. Use Splunk’s Field Extraction and Data Models to create structured fields for key Suricata log data, such as source/destination IPs, ports, protocols, and alert messages.
+Dashboard Setup: Create customized Splunk dashboards to visualize Suricata logs, highlighting key metrics such as alerts by severity, top source IPs, top destination IPs, and types of detected threats.
+
+4. Detection and Alerting
+Real-Time Monitoring: Continuously monitor Suricata logs in Splunk for any anomalies or security threats. This involves setting up searches and dashboards that provide real-time visibility into network activity.
+Alert Configuration: Configure alerts in Splunk to trigger when certain conditions are met, such as high-severity Suricata alerts, unusual traffic patterns, or specific types of attacks (e.g., DDoS, port scanning). Alerts should be configured with thresholds to minimize false positives.
+Alert Notification: Define notification channels (e.g., email, SMS, Slack) to ensure that security teams are immediately informed of detected incidents. Include relevant details in the alerts, such as timestamp, affected systems, and the nature of the threat.
+
+5. Incident Response Steps
+Identification
+
+Initial Alert Review: Upon receiving an alert, review the Suricata logs in Splunk to confirm the authenticity and severity of the incident. Cross-reference the alert with historical data to determine if it is part of a larger trend.
+Contextual Data Gathering: Use Splunk to correlate Suricata logs with other data sources (e.g., firewall logs, system logs) to gain a comprehensive view of the incident. This step helps in identifying the attack vector and potential impact.
+Containment
+
+Short-Term Containment: Based on the severity of the incident, execute immediate containment actions such as blocking IP addresses, isolating affected systems, or disabling network services. These actions should be logged in Splunk for auditing purposes.
+Long-Term Containment: Plan and implement longer-term containment strategies, such as applying patches, reconfiguring firewalls, or updating IDS/IPS rules to prevent the attack from spreading or recurring.
+Eradication
+
+Root Cause Analysis: Use Splunk to perform in-depth analysis of the incident to identify the root cause. This could involve tracing the origin of the attack, identifying compromised systems, or discovering vulnerabilities exploited during the attack.
+Elimination of Threats: Based on the findings, take steps to remove the threat from the environment. This might include malware removal, closing exploited vulnerabilities, or reconfiguring affected systems.
+Recovery
+
+System Restoration: Restore affected systems and services to normal operation. Validate that all traces of the attack have been eradicated and that systems are functioning correctly.
+Monitoring Post-Recovery: Continue to monitor Suricata logs in Splunk for signs of residual threats or related incidents. This ensures that the environment remains secure after recovery.
+Lessons Learned
+
+Post-Incident Review: Conduct a post-incident review to evaluate the effectiveness of the response. This should include a review of the Splunk logs and alerts to assess how well the incident was detected and managed.
+Update Policies and Procedures: Use the findings from the review to update incident response policies, Suricata rules, and Splunk alerts. Improve the overall security posture by addressing any gaps identified during the incident.
+
+6. Documentation and Reporting
+Incident Documentation: Maintain detailed documentation of the incident, including all actions taken during the response, the timeline of events, and any evidence collected. This documentation should be stored securely and referenced for future incidents.
+Reporting: Generate and distribute incident reports to relevant stakeholders, including management, IT teams, and legal/compliance departments. Reports should highlight the nature of the incident, the response actions taken, and any recommendations for future prevention.
+
+
+7. Continuous Improvement
+Regular Audits: Schedule regular audits of Suricata configurations, Splunk queries, and alert thresholds to ensure they remain effective and relevant to the current threat landscape.
+
+Training and Awareness: Provide ongoing training to the incident response team on using Splunk and Suricata effectively. Conduct regular drills and tabletop exercises to keep the team prepared for real incidents.
+
+Feedback Loop: Establish a feedback loop to incorporate lessons learned from incidents into the overall security strategy. Continuously improve the incident response process based on evolving threats and technological advancements.
+
+8. Timeline for Detected Attacks
+The following timeline outlines the key steps and approximate times for each phase of the incident response process:
+
+| Time (Minutes) | Activity | Description |
+|---------------|----------|-------------|
+| 0-5 | Alert Triage | First responder reviews the alert in Splunk. |
+| 5-10 | Log Analysis | Analyze Suricata logs to understand the attack. |
+| 10-15 | Evidence Collection | Collect and preserve relevant logs and evidence. |
+| 15-20 | Containment | Isolate affected systems and block malicious IPs. |
+| 20-30 | Eradication | Remove malicious software and apply patches. |
+| 30-45 | Recovery | Restore systems to a known good state and test. |
+| 45-60 | Post-Incident Activities | Conduct a review, document the incident, and prepare a report. |
+
+9. Reporting the Timeline
+The incident response team will document the actual timeline of events during the incident and include this in the final report. This report will be shared with management and relevant stakeholders to ensure transparency and facilitate future improvements in the incident response process.
+
+10. Continuous Improvement
+By integrating Suricata logs with Splunk and following this incident response plan, organizations can effectively detect, respond to, and mitigate security incidents. This approach not only helps in protecting critical assets but also in improving the overall security posture through continuous monitoring and improvement.
+
+
+Report: Incident Report: Web Application Monitoring Using Suricata and Splunk
+
+Incident Overview
+- Incident Date: 5th September 2024
+- Incident Detection Time: 08:26 AM
+- Incident Reported By: Suricata & Splunk monitoring systems
+- Affected System: Web Application running on server `PJ1GNT`
+- Severity Level: High
+- Status: Resolved
+
+Summary
+This report provides details on a security incident involving the detection of suspicious activity targeting a web application, monitored using Suricata and analyzed in Splunk. The intrusion detection system (IDS) flagged multiple alerts, indicating potential malicious attempts to exploit the application. These alerts were analyzed using Splunk for further investigation and response.
+
+
+
+Timeline
+
+1. 08:26 AM (Detection):  
+Suricata triggered alerts about abnormal traffic patterns targeting the web application, specifically indicating potential SQL Injection attempts. The following rules from Suricata were flagged:
+   
+   - SQL Injection Detection
+   - Cross-Site Scripting (XSS) Attempt
+   - Reconnaissance Scans
+
+2. 08:30 AM (Alert Analysis)
+Splunk ingested the Suricata logs in real-time, and alerts were raised based on correlation with Suricata rule violations. Splunk dashboards showed a spike in malicious traffic from a specific source IP. This triggered the automatic incident response workflow.
+   
+3. 08:35 AM (Initial Response)
+Security teams were notified via automated email alerts and Slack messages generated by Splunk. The team accessed Splunk's web application dashboard, showing the origin of the attack and the type of suspicious activities. Suricata logs were analyzed for packet-level details.
+
+4. 08:45 AM (Containment)
+   The security team initiated containment measures:
+Blocking the Source IP: The offending IP address, **192.168.1.50**, was blocked at the firewall level.
+   - Review of Affected Systems: Logs were thoroughly reviewed for any signs of successful exploitation, though no evidence was found that the web application was compromised.
+
+5. 09:00 AM (Investigation)
+Further investigation was conducted using Splunk to correlate the incident with broader network logs, including system and web server logs. The following insights were identified:
+   - The attacker attempted multiple SQL injection payloads.
+   - No successful exploitation attempts were detected due to existing input validation and web application firewalls (WAF).
+
+6. 09:15 AM (Eradication)
+   - The web application underwent a security audit to check for any misconfigurations or vulnerabilities.
+   - Suricata’s detection rules were updated to include more refined patterns to catch similar attack vectors.
+   
+7. 09:30 AM (Recovery)
+   - Normal web application operations were restored with no downtime reported.
+   - Post-recovery monitoring was initiated using Splunk to ensure no residual threats remained. Continuous monitoring of incoming traffic confirmed that the malicious traffic ceased after the block.
+
+8. 10:00 AM (Post-Incident Review)
+   - A review was conducted to analyze the overall response and effectiveness of detection.
+   - Security policies were updated based on the incident findings, including refining Suricata rules for better detection and tuning Splunk alerts for fewer false positives.
+
+Analysis
+
+Root Cause
+   - The incident was triggered by an external attacker attempting SQL Injection and XSS attacks to exploit the web application. The attacker scanned for vulnerabilities using automated tools, leading to multiple alerts.
+
+Detection Efficiency
+   - Suricata's IDS successfully identified suspicious traffic patterns and blocked the attack before any exploitation could occur. Its integration with Splunk enabled real-time alerts and facilitated a rapid response.
+
+Splunk Correlation:
+   - Splunk correlated Suricata logs with other network data, making it easier for the security team to identify the source and scope of the attack. This reduced the time spent on manual log analysis and allowed for quick decisions on containment.
+
+Recommendations & Improvements
+
+1. Strengthen Rule Sets:
+   - Suricata rule sets will be periodically reviewed and updated to ensure they are current and can detect emerging threats, including more complex injection attacks and reconnaissance techniques.
+
+2. Enhance Web Application Security:
+   - Implement further hardening of the web application, including security patches and updated input validation measures, to minimize vulnerabilities.
+
+3. Additional Alerts:
+   - Tune Splunk alerts to reduce false positives and ensure the security team only gets notified for relevant and high-risk incidents.
+   
+4. Continuous Monitoring:
+   - Continuous monitoring and logging via Splunk should remain in place for improved threat detection, including the addition of external threat intelligence feeds for more accurate detection.
+
+Conclusion
+
+This incident demonstrated the effectiveness of using Suricata and Splunk together for real-time web application monitoring and incident response. Suricata's ability to detect and log potential threats, combined with Splunk’s powerful analytics and alerting capabilities, allowed the security team to respond quickly and prevent any damage to the web application.
+
+The web application was not compromised, and no data was lost. The lessons learned from this incident will be used to further improve the security posture of the organization, ensuring faster detection and more refined defenses against future attacks.
+
+Prepared by
+Security Operations Team  
+Date: 5th September 2024
+
+
+
+Check list: Documentation
+Detailed configuration.
+Provide the pentesting report.
+Provide Incident Report.
+Response Plan: Develop an incident response plan and report the timeline for detected attacks
+
+
+
+
+
